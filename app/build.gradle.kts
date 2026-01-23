@@ -5,14 +5,12 @@ plugins {
 
 android {
     namespace = "com.cst338.cst438_p1"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.cst338.cst438_p1"
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
