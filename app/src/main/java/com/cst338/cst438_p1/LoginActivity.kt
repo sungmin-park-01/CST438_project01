@@ -22,6 +22,9 @@ class LoginActivity : ComponentActivity() {
             val passWord = password.text.toString()
             if (userName.isEmpty()||passWord.isEmpty()){
                 Toast.makeText(this,"Please fill all fields", Toast.LENGTH_SHORT).show()
+            }else{
+                val temp = Intent(this, HomeActivity::class.java)
+                startActivity(temp)
             }
         }
         signupButton.setOnClickListener {
