@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CST438_P1</string>
+    <string name="new_joke">New Joke</string>
+    <string name="my_joke">My Joke</string>
+    <string name="profile">Profile</string>
+    <string name="close">Close</string>
+    <string name="logout">Logout</string>
 </resources>
