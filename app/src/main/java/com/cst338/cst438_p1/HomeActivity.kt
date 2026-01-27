@@ -1,6 +1,7 @@
 package com.cst338.cst438_p1
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
