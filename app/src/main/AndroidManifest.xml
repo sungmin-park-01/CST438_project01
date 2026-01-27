@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CST438_P1">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/Theme.CST438_P1" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
@@ -25,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".LoginActivity"/>
         <activity android:name=".SignupActivity"/>
     </application>
