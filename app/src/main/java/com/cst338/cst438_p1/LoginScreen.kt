@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
         ) {
             Text(
                 text = "Login",
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier. padding(top = 24.dp)
             )
             OutlinedTextField(
                 value = username,
@@ -78,6 +78,7 @@ import androidx.compose.ui.unit.dp
             Text(
                 text = "Don't have an account?"
             )
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onSignupClick,
                 modifier = Modifier.fillMaxWidth()
