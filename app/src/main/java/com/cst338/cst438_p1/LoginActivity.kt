@@ -6,33 +6,22 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 
 class LoginActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        val user = findViewById<EditText>(R.id.UserName)
-         val password = findViewById<EditText>(R.id.PasswordInput)
-        val loginButton = findViewById<Button>(R.id.loginButton)
-        val signupButton = findViewById<Button>(R.id.signUpButton)
 
-        loginButton.setOnClickListener {
-            val userName = user.text.toString()
-            val passWord = password.text.toString()
-            if (userName.isEmpty()||passWord.isEmpty()){
-                Toast.makeText(this,"Please fill all fields", Toast.LENGTH_SHORT).show()
-            }else{
-                val temp = Intent(this, HomeActivity::class.java)
-                startActivity(temp)
-            }
+        setContent {
+            LoginScreen(
+                onLoginSuccess = {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                },
+                onSignupClick = {
+                    startActivity(Intent(this, SignupActivity::class.java))
+                }
+            )
         }
-        signupButton.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
-            //finish()
-        }
-
-
     }
 }
