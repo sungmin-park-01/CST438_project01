@@ -85,5 +85,8 @@ import androidx.compose.ui.unit.dp
             ){
                 Text("Sign up!")
             }
+            Button(onClick = onLoginSuccess) {
+                Text("Dev: Skip Login")
+            }
         }
 }

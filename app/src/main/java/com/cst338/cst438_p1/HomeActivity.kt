@@ -2,20 +2,67 @@ package com.cst338.cst438_p1
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_home)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        setContent {
+            var joke by remember { mutableStateOf("Loading…") }
+
+            // Load once when screen opens
+            LaunchedEffect(Unit) {
+                joke = withContext(Dispatchers.IO) {
+                    try {
+                        val response = RetrofitClient.dadJokeApi.getRandomJoke()
+                        if (response.isSuccessful) {
+                            response.body()?.joke ?: "No joke returned."
+                        } else {
+                            "HTTP ${response.code()}"
+                        }
+                    } catch (e: Exception) {
+                        "Network error: ${e.message}"
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(text = joke)
+
+                Button(onClick = {
+                    // get a new joke
+                    lifecycleScope.launch {
+                        joke = withContext(Dispatchers.IO) {
+                            try {
+                                val response = RetrofitClient.dadJokeApi.getRandomJoke()
+                                if (response.isSuccessful) response.body()?.joke ?: "No joke returned."
+                                else "HTTP ${response.code()}"
+                            } catch (e: Exception) {
+                                "Network error: ${e.message}"
+                            }
+                        }
+                    }
+                }) {
+                    Text("New Joke")
+                }
+            }
         }
     }
 }
