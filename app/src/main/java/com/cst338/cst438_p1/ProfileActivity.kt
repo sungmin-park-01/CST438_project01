@@ -1,5 +1,6 @@
 package com.cst338.cst438_p1
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import androidx.compose.ui.platform.LocalContext
+import androidx.activity.compose.LocalActivity
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,12 +46,14 @@ class ProfileActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileLayout(name: String, modifier: Modifier) {
+    val activity = LocalActivity.current
+
     Scaffold(
         topBar = {
                 TopAppBar(
                     //TODO: will need to update this to show the logged in username
                     title = { Text("Hello, user!") },
-                    navigationIcon = { IconButton(onClick = { }) {
+                    navigationIcon = { IconButton(onClick = {activity?.finish() }) {
                             Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null

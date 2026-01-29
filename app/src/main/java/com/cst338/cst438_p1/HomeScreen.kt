@@ -20,10 +20,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(){
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -90,7 +94,9 @@ fun HomeScreen(){
             }
 
             Button(
-                onClick = {print("haha")},
+                onClick = {context.startActivity(
+                    Intent(context, ProfileActivity::class.java)
+                )},
                 modifier = Modifier.padding(top = 2.dp)
             ) {
                 Text("Profile")
