@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-
+import androidx.room.Room
 
 @Composable
 fun SignupScreen(
@@ -28,7 +28,6 @@ fun SignupScreen(
 ){
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     val context = LocalContext.current
 
     Column(
