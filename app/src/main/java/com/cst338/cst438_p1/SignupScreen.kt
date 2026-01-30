@@ -19,8 +19,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
+import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 
 @Composable
 fun SignupScreen(
@@ -67,4 +70,15 @@ fun SignupScreen(
             Text("Sign up!")
         }
     }
+}
+
+@Preview(device = Devices.PIXEL_7, showSystemUi = true)
+@Composable
+fun SignupScreenPreview() {
+    CST438_P1Theme {
+        SignupScreen (
+            onSignupComplete = { }
+        )
+    }
+
 }

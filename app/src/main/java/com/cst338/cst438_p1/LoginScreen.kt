@@ -19,9 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 
-    @Composable
+@Composable
     fun LoginScreen(
         onLoginSuccess: () -> Unit,
         onSignupClick: () -> Unit
@@ -88,4 +91,16 @@ import androidx.compose.ui.unit.dp
                 Text("Dev: Skip Login")
             }
         }
+}
+
+@Preview(device = Devices.PIXEL_7, showSystemUi = true)
+@Composable
+fun LoginScreenPreview() {
+    CST438_P1Theme {
+        LoginScreen (
+            onLoginSuccess = {},
+            onSignupClick = {}
+        )
+    }
+
 }
