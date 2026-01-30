@@ -52,7 +52,8 @@ fun HomeScreen(){
                     modifier = Modifier.fillMaxWidth()
                 ){
                     Button(
-                        onClick = { println("haha") },
+                        onClick = { val intent = Intent(context, LoginActivity::class.java)
+                            context.startActivity(intent) },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Logout")
