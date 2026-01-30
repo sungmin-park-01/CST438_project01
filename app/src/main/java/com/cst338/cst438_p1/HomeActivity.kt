@@ -18,9 +18,9 @@ class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             var joke by remember { mutableStateOf("Loading…") }
+            var jokeID by remember { mutableStateOf("") }
 
             // Load once when screen opens
             LaunchedEffect(Unit) {
@@ -29,6 +29,18 @@ class HomeActivity : ComponentActivity() {
                         val response = RetrofitClient.dadJokeApi.getRandomJoke()
                         if (response.isSuccessful) {
                             response.body()?.joke ?: "No joke returned."
+                        } else {
+                            "HTTP ${response.code()}"
+                        }
+                    } catch (e: Exception) {
+                        "Network error: ${e.message}"
+                    }
+                }
+                jokeID = withContext(Dispatchers.IO) {
+                    try {
+                        val response = RetrofitClient.dadJokeApi.getRandomJoke()
+                        if (response.isSuccessful) {
+                            response.body()?.id ?: "No id returned."
                         } else {
                             "HTTP ${response.code()}"
                         }
@@ -45,6 +57,7 @@ class HomeActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(text = joke)
+                Text(text = jokeID)
 
                 Button(onClick = {
                     // get a new joke
@@ -53,6 +66,15 @@ class HomeActivity : ComponentActivity() {
                             try {
                                 val response = RetrofitClient.dadJokeApi.getRandomJoke()
                                 if (response.isSuccessful) response.body()?.joke ?: "No joke returned."
+                                else "HTTP ${response.code()}"
+                            } catch (e: Exception) {
+                                "Network error: ${e.message}"
+                            }
+                        }
+                        jokeID = withContext(Dispatchers.IO) {
+                            try {
+                                val response = RetrofitClient.dadJokeApi.getRandomJoke()
+                                if (response.isSuccessful) response.body()?.id ?: "No joke returned."
                                 else "HTTP ${response.code()}"
                             } catch (e: Exception) {
                                 "Network error: ${e.message}"
