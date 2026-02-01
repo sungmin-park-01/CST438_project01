@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 
 class LoginActivity : ComponentActivity() {
 
@@ -14,14 +15,18 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            LoginScreen(
-                onLoginSuccess = {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                },
-                onSignupClick = {
-                    startActivity(Intent(this, SignupActivity::class.java))
-                }
-            )
+            CST438_P1Theme{
+                LoginScreen(
+                    onLoginSuccess = {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    },
+                    onSignupClick = {
+                        startActivity(Intent(this, SignupActivity::class.java))
+                    }
+                )
+
+            }
+
         }
     }
 }
