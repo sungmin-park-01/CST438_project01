@@ -16,12 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
-    @Composable
+@Composable
     fun LoginScreen(
         onLoginSuccess: () -> Unit,
         onSignupClick: () -> Unit
@@ -33,6 +35,10 @@ import androidx.compose.ui.unit.dp
             mutableStateOf("")
         }
         val context = androidx.compose.ui.platform.LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        val db = AppDatabase.getDatabase(context)
+        val userDao = db.userDao()
 
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Top
@@ -66,7 +72,20 @@ import androidx.compose.ui.unit.dp
                     if (username.isEmpty() || password.isEmpty()) {
                         Toast.makeText(context,"Please fill all fields", Toast.LENGTH_SHORT).show()
                     } else {
-                        onLoginSuccess()
+                        scope.launch {
+                            val user = userDao.getUser(username)
+
+                            when{
+                                user == null -> {
+                                    Toast.makeText(context,"User not found", Toast.LENGTH_SHORT).show()
+                                }
+                                user.password != password -> {
+                                    Toast.makeText(context,"Incorrect password", Toast.LENGTH_SHORT).show()
+                            } else -> {
+                                onLoginSuccess()
+                            }
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

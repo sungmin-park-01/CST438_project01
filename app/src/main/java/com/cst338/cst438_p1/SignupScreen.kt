@@ -15,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignupScreen(
@@ -29,6 +31,10 @@ fun SignupScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+
+    val scope = rememberCoroutineScope()
+    val db = AppDatabase.getDatabase(context)
+    val userDao = db.userDao()
 
     Column(
         modifier = androidx.compose.ui.Modifier.fillMaxSize().padding(24.dp)
@@ -58,8 +64,17 @@ fun SignupScreen(
                 if(username.isEmpty()||password.isEmpty()){
                     Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
                 }else{
-                    //save info here
-                    onSignupComplete()
+                    scope.launch {
+                        val existing = userDao.getUser(username)
+
+                        if(existing != null){
+                            Toast.makeText(context,"Username already exists", Toast.LENGTH_SHORT).show()
+                        }else{
+                            userDao.inset(User(username = username,password = password))
+                            onSignupComplete()
+                        }
+                    }
+
                 }
             },
             modifier = Modifier.fillMaxWidth()
