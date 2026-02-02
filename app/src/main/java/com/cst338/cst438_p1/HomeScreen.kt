@@ -33,7 +33,7 @@ fun HomeScreen(){
             TopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 title = {
                     Text("Dad Joke")
@@ -102,9 +102,6 @@ fun HomeScreen(){
             ) {
                 Text("Profile")
             }
-
-
-
         }
     }
 }
