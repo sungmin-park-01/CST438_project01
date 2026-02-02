@@ -14,14 +14,17 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            LoginScreen(
-                onLoginSuccess = {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                },
-                onSignupClick = {
-                    startActivity(Intent(this, SignupActivity::class.java))
-                }
-            )
+            AppTheme{
+                LoginScreen(
+                    onLoginSuccess = {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    },
+                    onSignupClick = {
+                        startActivity(Intent(this, SignupActivity::class.java))
+                    }
+                )
+            }
+
         }
     }
 }

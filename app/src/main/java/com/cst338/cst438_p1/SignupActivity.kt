@@ -9,11 +9,14 @@ class SignupActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SignupScreen(
-                onSignupComplete = {
-                    finish()
-                }
-            )
+            AppTheme {
+                SignupScreen(
+                    onSignupComplete = {
+                        finish()
+                    }
+                )
+            }
+
         }
     }
 }

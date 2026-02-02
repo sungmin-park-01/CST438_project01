@@ -14,7 +14,7 @@ class HomeActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            CST438_P1Theme {
+            AppTheme {
                 HomeScreen()
             }
         }

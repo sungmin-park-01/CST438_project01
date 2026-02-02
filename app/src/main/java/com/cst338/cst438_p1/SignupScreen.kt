@@ -75,7 +75,7 @@ fun SignupScreen(
 @Preview(device = Devices.PIXEL_7, showSystemUi = true)
 @Composable
 fun SignupScreenPreview() {
-    CST438_P1Theme {
+    AppTheme {
         SignupScreen (
             onSignupComplete = { }
         )

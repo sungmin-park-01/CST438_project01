@@ -33,7 +33,7 @@ fun HomeScreen(){
             TopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
                 title = {
                     Text("Dad Joke")
@@ -112,7 +112,7 @@ fun HomeScreen(){
 @Preview(device = Devices.PIXEL_7, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    CST438_P1Theme {
+    AppTheme {
         HomeScreen()
     }
 

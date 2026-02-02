@@ -96,7 +96,7 @@ import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 @Preview(device = Devices.PIXEL_7, showSystemUi = true)
 @Composable
 fun LoginScreenPreview() {
-    CST438_P1Theme {
+    AppTheme {
         LoginScreen (
             onLoginSuccess = {},
             onSignupClick = {}

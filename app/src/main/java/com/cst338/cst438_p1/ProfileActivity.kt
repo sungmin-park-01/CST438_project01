@@ -28,13 +28,14 @@ import androidx.compose.ui.unit.dp
 import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 import androidx.compose.ui.platform.LocalContext
 import androidx.activity.compose.LocalActivity
+import androidx.compose.material3.TopAppBarDefaults
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CST438_P1Theme {
+            AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ProfileLayout(name = "user", modifier = Modifier.padding(innerPadding))
                 }
@@ -60,12 +61,12 @@ fun ProfileLayout(name: String, modifier: Modifier) {
                             )
                         }
                     },
-                    colors = TopAppBarColors(
+                    colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                        actionIconContentColor = MaterialTheme.colorScheme.primary
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
             )
         }
@@ -86,7 +87,7 @@ fun ProfileLayout(name: String, modifier: Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileLayoutPreview() {
-    CST438_P1Theme() {
+    AppTheme {
         ProfileLayout("Android", modifier = Modifier)
     }
 }
