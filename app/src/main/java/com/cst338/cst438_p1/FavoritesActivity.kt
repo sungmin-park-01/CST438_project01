@@ -1,14 +1,12 @@
 package com.cst338.cst438_p1
 
-import android.graphics.Paint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +54,7 @@ class FavoritesActivity : ComponentActivity() {
 fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
     //TODO: update this or the onCreate to load in the logged-in user
 
-    val activity = LocalActivity.current
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -68,7 +67,10 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
                     actionIconContentColor = MaterialTheme.colorScheme.primary
                 ),
                 title = { Text("Favorites") },
-                navigationIcon = { IconButton(onClick = { activity?.finish() })  {
+                navigationIcon = { IconButton(onClick = {
+                    val intent = Intent(context, HomeActivity::class.java)
+                    context.startActivity(intent)
+                })  {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowBack,
                         contentDescription = null
@@ -78,11 +80,12 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
         }
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.fillMaxWidth().padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.CenterHorizontally,
+            userScrollEnabled = true) {
             //TODO: Actually get the data from DB first and adjust the for loop here accordingly.
             //TODO: a long click/tap on the items here should bring up an option to delete them.
 
-            for(i in 1..50) {
+            for(i in 1..20) {
                 item {
                         Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
                             border = BorderStroke(1.dp, color = Color.Black)
@@ -95,7 +98,7 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
                                     Box(modifier = Modifier.fillMaxWidth(0.95f),
                                         contentAlignment = Alignment.Center)
                                 {
-                                    Text("Item " + i,
+                                    Text("Why do you never see elephants hiding in trees? Because they're so good at it.",
                                         textAlign = TextAlign.Center,
                                         color = Color.Black)
                                 }

@@ -88,7 +88,10 @@ fun HomeScreen(){
             }
 
             Button(
-                onClick = {print("haha")},
+                onClick = {
+                    val intent = Intent(context, FavoritesActivity::class.java)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.padding(top = 2.dp)
             ) {
                 Text("My Favorite Jokes")
