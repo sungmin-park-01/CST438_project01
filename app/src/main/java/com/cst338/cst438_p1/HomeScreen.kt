@@ -20,16 +20,20 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(){
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 title = {
                     Text("Dad Joke")
@@ -48,7 +52,8 @@ fun HomeScreen(){
                     modifier = Modifier.fillMaxWidth()
                 ){
                     Button(
-                        onClick = { println("haha") },
+                        onClick = { val intent = Intent(context, LoginActivity::class.java)
+                            context.startActivity(intent) },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Logout")
@@ -90,14 +95,13 @@ fun HomeScreen(){
             }
 
             Button(
-                onClick = {print("haha")},
+                onClick = {context.startActivity(
+                    Intent(context, ProfileActivity::class.java)
+                )},
                 modifier = Modifier.padding(top = 2.dp)
             ) {
                 Text("Profile")
             }
-
-
-
         }
     }
 }
@@ -105,7 +109,8 @@ fun HomeScreen(){
 @Preview(device = Devices.PIXEL_7, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    CST438_P1Theme {
+    AppTheme {
         HomeScreen()
     }
+
 }
