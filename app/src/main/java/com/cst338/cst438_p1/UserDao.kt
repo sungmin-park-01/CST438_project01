@@ -7,6 +7,8 @@ import androidx.room.Delete
 
 @Dao
 interface UserDao {
+    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
+    suspend fun getUser(username: String): User?
     @Query("SELECT * FROM USERS")
     fun getAll(): List<User>
 
@@ -22,7 +24,10 @@ interface UserDao {
     @Delete
     fun delete(user: User)
 
-    @Delete
-    fun deleteJoke(joke: Joke)
+//    @Delete
+//    fun deleteJoke(joke: Joke)
+
+    @Insert
+    suspend fun inset(user: User)
 
 }

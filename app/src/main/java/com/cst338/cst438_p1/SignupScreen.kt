@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
-import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,14 +44,49 @@ fun SignupScreen(
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = { IconButton(onClick = {  }) { // Just design for now
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = null
-                    )
+    val scope = rememberCoroutineScope()
+    val db = AppDatabase.getDatabase(context)
+    val userDao = db.userDao()
+
+    Column(
+        modifier = androidx.compose.ui.Modifier.fillMaxSize().padding(24.dp)
+    ) {
+        Text(
+            text = "Create account",
+            modifier = androidx.compose.ui.Modifier.padding(bottom = 24.dp)
+        )
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it},
+            label = { Text("Enter new username")},
+            modifier = androidx.compose.ui.Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it},
+            label = { Text("Enter new password")},
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = androidx.compose.ui.Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                if(username.isEmpty()||password.isEmpty()){
+                    Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
+                }else{
+                    scope.launch {
+                        val existing = userDao.getUser(username)
+
+                        if(existing != null){
+                            Toast.makeText(context,"Username already exists", Toast.LENGTH_SHORT).show()
+                        }else{
+                            userDao.inset(User(username = username,password = password))
+                            onSignupComplete()
+                        }
+                    }
+
                 }
                 },
                 colors = topAppBarColors(
