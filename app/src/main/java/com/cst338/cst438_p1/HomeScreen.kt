@@ -36,7 +36,7 @@ fun HomeScreen(){
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 title = {
-                    Text("Dad Joke")
+                    Text("Otter-ly Hilarious!")
                 }
             )
         },
