@@ -38,8 +38,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupComplete: () -> Unit
-){
+    onSignupComplete: () -> Unit,
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -48,91 +48,58 @@ fun SignupScreen(
     val db = AppDatabase.getDatabase(context)
     val userDao = db.userDao()
 
-    Column(
-        modifier = androidx.compose.ui.Modifier.fillMaxSize().padding(24.dp)
-    ) {
-        Text(
-            text = "Create account",
-            modifier = androidx.compose.ui.Modifier.padding(bottom = 24.dp)
-        )
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it},
-            label = { Text("Enter new username")},
-            modifier = androidx.compose.ui.Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it},
-            label = { Text("Enter new password")},
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = androidx.compose.ui.Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Button(
-            onClick = {
-                if(username.isEmpty()||password.isEmpty()){
-                    Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
-                }else{
-                    scope.launch {
-                        val existing = userDao.getUser(username)
-
-                        if(existing != null){
-                            Toast.makeText(context,"Username already exists", Toast.LENGTH_SHORT).show()
-                        }else{
-                            userDao.inset(User(username = username,password = password))
-                            onSignupComplete()
-                        }
-                    }
-
-                }
-                },
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
-                title = {
-                    Text("Dad Joke")
-                }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Dad Joke") },
             )
-        },
-        bottomBar = {
-
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
-            modifier = androidx.compose.ui.Modifier.fillMaxSize()
-                .padding(24.dp).padding(innerPadding)
+            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(24.dp),
+            verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = "Create account",
-                modifier = androidx.compose.ui.Modifier.padding(bottom = 24.dp)
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 24.dp)
             )
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it},
-                label = { Text("Enter new username")},
+                onValueChange = { username = it },
+                label = { Text("Enter new username") },
                 modifier = androidx.compose.ui.Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it},
-                label = { Text("Enter new password")},
+                onValueChange = { password = it },
+                label = { Text("Enter new password") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = androidx.compose.ui.Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
-
             Button(
                 onClick = {
-                    if(username.isEmpty()||password.isEmpty()){
-                        Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
-                    }else{
-                        //save info here
-                        onSignupComplete()
+                    if (username.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        scope.launch {
+                            val existing = userDao.getUser(username)
+
+                            if (existing != null) {
+                                Toast.makeText(
+                                    context,
+                                    "Username already exists",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                userDao.inset(User(username = username, password = password))
+                                onSignupComplete()
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -141,18 +108,16 @@ fun SignupScreen(
             }
         }
     }
-
-
-
 }
 
-@Preview(device = Devices.PIXEL_7, showSystemUi = true)
-@Composable
-fun SignupScreenPreview() {
-    AppTheme {
-        SignupScreen (
-            onSignupComplete = { }
-        )
-    }
 
-}
+//@Preview(device = Devices.PIXEL_7, showSystemUi = true)
+//@Composable
+//fun SignupScreenPreview() {
+//    AppTheme {
+//        SignupScreen (
+//            onSignupComplete = { }
+//        )
+//    }
+//
+//}
