@@ -38,7 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
                     scope.launch {
                         val userDao = database.userDao()
 
-                        userDao.insert(User(1, "user", "password"))
+                        userDao.insert(User(1, "User", "password"))
                     }
                 }
             }
