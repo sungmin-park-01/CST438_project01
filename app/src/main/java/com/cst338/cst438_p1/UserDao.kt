@@ -28,6 +28,6 @@ interface UserDao {
 //    fun deleteJoke(joke: Joke)
 
     @Insert
-    suspend fun inset(user: User)
+    suspend fun insert(user: User)
 
 }

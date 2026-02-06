@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
         val context = androidx.compose.ui.platform.LocalContext.current
         val scope = rememberCoroutineScope()
 
-        val db = AppDatabase.getDatabase(context)
+        val db = AppDatabase.getDatabase(context, scope)
         val userDao = db.userDao()
 
     Scaffold(
@@ -107,6 +107,7 @@ import kotlinx.coroutines.launch
                                 user.password != password -> {
                                     Toast.makeText(context,"Incorrect password", Toast.LENGTH_SHORT).show()
                             } else -> {
+                                val userId = user.uid
                                 onLoginSuccess()
                             }
                             }
