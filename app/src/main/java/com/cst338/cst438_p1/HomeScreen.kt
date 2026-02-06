@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(user: User){
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+
+    val userIdKey = "CST438P1.UserId.Key"
 
     Scaffold(
         topBar = {
@@ -92,6 +93,7 @@ fun HomeScreen(user: User){
             Button(
                 onClick = {
                     val intent = Intent(context, FavoritesActivity::class.java)
+                    intent.putExtra(userIdKey, user.uid)
                     context.startActivity(intent)
                 },
                 modifier = Modifier.padding(top = 2.dp)

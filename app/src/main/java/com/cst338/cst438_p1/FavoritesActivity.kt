@@ -30,33 +30,46 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import kotlinx.coroutines.launch
 
 class FavoritesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val db = AppDatabase.getDatabase(this, lifecycleScope)
+        val userDao = db.userDao()
+        val jokeDao = db.jokeDao()
+
+        val userIdKey = "CST438P1.UserId.Key"
+        val loggedInUserId = intent.getIntExtra(userIdKey, -1)
+
+        var user: User
+        var favorites: List<Joke>
+        lifecycleScope.launch {
+            user = userDao.getUserById(loggedInUserId)!!
+            favorites = jokeDao.getJokeByUserId(loggedInUserId)
+
         setContent {
             CST438_P1Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    FavoriteScreen(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                    FavoriteScreen(user, favorites)
             }
+        }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
-    //TODO: update this or the onCreate to load in the logged-in user
+fun FavoriteScreen(user: User, favorites: List<Joke>) {
 
     val context = LocalContext.current
+    val userIdKey = "CST438P1.UserId.Key"
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 colors = TopAppBarColors(
@@ -69,6 +82,7 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
                 title = { Text("Favorites") },
                 navigationIcon = { IconButton(onClick = {
                     val intent = Intent(context, HomeActivity::class.java)
+                    intent.putExtra(userIdKey, user.uid)
                     context.startActivity(intent)
                 })  {
                     Icon(
@@ -82,10 +96,9 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
         LazyColumn(modifier = Modifier.fillMaxWidth().padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true) {
-            //TODO: Actually get the data from DB first and adjust the for loop here accordingly.
             //TODO: a long click/tap on the items here should bring up an option to delete them.
 
-            for(i in 1..20) {
+            for(i in favorites) {
                 item {
                         Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
                             border = BorderStroke(1.dp, color = Color.Black)
@@ -98,7 +111,7 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
                                     Box(modifier = Modifier.fillMaxWidth(0.95f),
                                         contentAlignment = Alignment.Center)
                                 {
-                                    Text("Why do you never see elephants hiding in trees? Because they're so good at it.",
+                                    Text(i.joke,
                                         textAlign = TextAlign.Center,
                                         color = Color.Black)
                                 }
@@ -114,6 +127,10 @@ fun FavoriteScreen(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun FavoriteScreenPreview() {
     CST438_P1Theme {
-        FavoriteScreen("Android")
+        val jokes = listOf<Joke>(Joke("uszdNZ8MRCd", "My new thesaurus is terrible. In fact, it's so bad, I'd say it's terrible."))
+        FavoriteScreen(
+            User(0, "User", "password"),
+            jokes
+            )
     }
 }
