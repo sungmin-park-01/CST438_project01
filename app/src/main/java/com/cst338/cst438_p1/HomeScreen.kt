@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(user: User){
+fun HomeScreen(user: User) {
     val context = LocalContext.current
 
     val userIdKey = "CST438P1.UserId.Key"
@@ -49,14 +49,16 @@ fun HomeScreen(user: User){
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
-            ){
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
-                ){
+                ) {
                     Button(
-                        onClick = { val intent = Intent(context, LoginActivity::class.java)
-                            context.startActivity(intent) },
+                        onClick = {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            context.startActivity(intent)
+                        },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Logout")
@@ -71,9 +73,10 @@ fun HomeScreen(user: User){
                 }
             }
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -84,7 +87,7 @@ fun HomeScreen(user: User){
             )
 
             Button(
-                onClick = {print("haha")},
+                onClick = { print("haha") },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text("New Jokes")
@@ -102,9 +105,11 @@ fun HomeScreen(user: User){
             }
 
             Button(
-                onClick = {context.startActivity(
-                    Intent(context, ProfileActivity::class.java)
-                )},
+                onClick = {
+                    val intent = Intent(context, ProfileActivity::class.java)
+                    intent.putExtra(userIdKey, user.uid)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.padding(top = 2.dp)
             ) {
                 Text("Profile")
