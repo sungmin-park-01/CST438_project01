@@ -1,6 +1,6 @@
 package com.cst338.cst438_p1
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,25 +19,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 import androidx.compose.ui.platform.LocalContext
-import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ProfileLayout(name = "user", modifier = Modifier.padding(innerPadding))
+
+        val db = AppDatabase.getDatabase(this, lifecycleScope)
+        val userDao = db.userDao()
+
+        val userIdKey = "CST438P1.UserId.Key"
+        val loggedInUserId = intent.getIntExtra(userIdKey, -1)
+
+        var user: User
+        lifecycleScope.launch {
+            user = userDao.getUserById(loggedInUserId)!!
+
+            setContent {
+                AppTheme {
+                    ProfileScreen(user)
                 }
             }
         }
@@ -46,33 +55,43 @@ class ProfileActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileLayout(name: String, modifier: Modifier) {
-    val activity = LocalActivity.current
+fun ProfileScreen(user: User) {
+    val context = LocalContext.current
+    val userIdKey = "CST438P1.UserId.Key"
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
-                TopAppBar(
-                    //TODO: will need to update this to show the logged in username
-                    title = { Text("Hello, user!") },
-                    navigationIcon = { IconButton(onClick = {activity?.finish() }) {
-                            Icon(
+            TopAppBar(
+                title = { Text("Hello " + user.username + "!") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        val intent = Intent(context, HomeActivity::class.java)
+                        intent.putExtra(userIdKey, user.uid)
+                        context.startActivity(intent)
+                    }) {
+                        Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Button(onClick = { }, modifier = Modifier.padding(16.dp)) {
                 Text("Change Password")
             }
@@ -86,8 +105,8 @@ fun ProfileLayout(name: String, modifier: Modifier) {
 @Preview(showBackground = false)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileLayoutPreview() {
+fun ProfileScreenPreview() {
     AppTheme {
-        ProfileLayout("Android", modifier = Modifier)
+        ProfileScreen(User(1, "User", "password"))
     }
 }
