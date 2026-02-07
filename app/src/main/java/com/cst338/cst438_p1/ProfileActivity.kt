@@ -1,6 +1,5 @@
 package com.cst338.cst438_p1
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,15 +19,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 import androidx.compose.ui.platform.LocalContext
-import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -50,7 +46,7 @@ class ProfileActivity : ComponentActivity() {
 
             setContent {
                 AppTheme {
-                    ProfileLayout(user)
+                    ProfileScreen(user)
                 }
             }
         }
@@ -59,7 +55,7 @@ class ProfileActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileLayout(user: User) {
+fun ProfileScreen(user: User) {
     val context = LocalContext.current
     val userIdKey = "CST438P1.UserId.Key"
 
@@ -109,8 +105,8 @@ fun ProfileLayout(user: User) {
 @Preview(showBackground = false)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileLayoutPreview() {
+fun ProfileScreenPreview() {
     AppTheme {
-        ProfileLayout(User(1, "User", "password"))
+        ProfileScreen(User(1, "User", "password"))
     }
 }
