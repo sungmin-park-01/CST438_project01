@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@Database(entities = [User::class, Joke::class, Favorite::class], version = 1)
+@Database(entities = [User::class, Joke::class, Favorite::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun jokeDao(): JokeDao
