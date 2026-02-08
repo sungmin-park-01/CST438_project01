@@ -15,6 +15,7 @@ class HomeActivity : ComponentActivity() {
 
         val db = AppDatabase.getDatabase(this, lifecycleScope)
         val userDao = db.userDao()
+        val favoriteDao = db.favoriteDao()
 
         val userIdKey = "CST438P1.UserId.Key"
         val loggedInUserId = intent.getIntExtra(userIdKey, -1)
@@ -25,7 +26,7 @@ class HomeActivity : ComponentActivity() {
 
             setContent {
                 AppTheme {
-                    HomeScreen(user)
+                    HomeScreen(user = user, favoriteDao = favoriteDao)
                 }
             }
         }
