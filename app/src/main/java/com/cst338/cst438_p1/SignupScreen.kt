@@ -15,22 +15,26 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupComplete: () -> Unit,
+    onSignupComplete: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -41,21 +45,31 @@ fun SignupScreen(
     val userDao = db.userDao()
 
 
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Otter-ly Hilarious!") },
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                title = {
+                    Text("Otter-ly Hilarious!")
+                }
             )
+        },
+        bottomBar = {
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(24.dp),
-            verticalArrangement = Arrangement.Top
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Create account",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = androidx.compose.ui.Modifier.padding(bottom = 24.dp)
             )
             OutlinedTextField(
                 value = username,
@@ -72,6 +86,8 @@ fun SignupScreen(
                 modifier = androidx.compose.ui.Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
+
+
             Button(
                 onClick = {
                     if (username.isEmpty() || password.isEmpty()) {
@@ -80,6 +96,7 @@ fun SignupScreen(
                     } else {
                         scope.launch {
                             val existing = userDao.getUser(username)
+
 
                             if (existing != null) {
                                 Toast.makeText(
@@ -92,24 +109,25 @@ fun SignupScreen(
                                 onSignupComplete()
                             }
                         }
+
+
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
+                }
             ) {
-                Text("Sign up!")
+                Text("What is it?")
             }
+
         }
+
     }
 }
 
-
-//@Preview(device = Devices.PIXEL_7, showSystemUi = true)
-//@Composable
-//fun SignupScreenPreview() {
-//    AppTheme {
-//        SignupScreen (
-//            onSignupComplete = { }
-//        )
-//    }
-//
-//}
+@Preview(device = Devices.PIXEL_7, showSystemUi = true)
+@Composable
+fun SignupScreenPreview() {
+    AppTheme {
+        SignupScreen (
+            onSignupComplete = { }
+        )
+    }
+}

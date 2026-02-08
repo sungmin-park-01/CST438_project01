@@ -54,18 +54,11 @@ class FavoritesActivity : ComponentActivity() {
             user = userDao.getUserById(loggedInUserId)!!
             favorites = jokeDao.getJokeByUserId(loggedInUserId)
 
-        setContent {
-            CST438_P1Theme {
+            setContent {
+                AppTheme {
                     FavoriteScreen(user, favorites)
-            AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    FavoriteScreen(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
                 }
             }
-        }
         }
     }
 }
@@ -82,50 +75,62 @@ fun FavoriteScreen(user: User, favorites: List<Joke>) {
         topBar = {
             TopAppBar(
                 title = { Text("Favorites") },
-                navigationIcon = { IconButton(onClick = {
-                    val intent = Intent(context, HomeActivity::class.java)
-                    intent.putExtra(userIdKey, user.uid)
-                    context.startActivity(intent)
-                })  {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = null
-                    )
-                }},
+                navigationIcon = {
+                    IconButton(onClick = {
+                        val intent = Intent(context, HomeActivity::class.java)
+                        intent.putExtra(userIdKey, user.uid)
+                        context.startActivity(intent)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                },
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         }
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.fillMaxWidth().padding(innerPadding),
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            userScrollEnabled = true) {
+            userScrollEnabled = true
+        ) {
             //TODO: a long click/tap on the items here should bring up an option to delete them.
 
-            for(i in favorites) {
+            for (i in favorites) {
                 item {
-                        Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
-                            border = BorderStroke(1.dp, color = Color.Black)
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        border = BorderStroke(1.dp, color = Color.Black)
+                    ) {
+                        //Not sure why, but the Box within a Box is the only way I could get this
+                        //to center the content AND also not have the text clip the rounded edges
+                        //of the Cards.
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            //Not sure why, but the Box within a Box is the only way I could get this
-                            //to center the content AND also not have the text clip the rounded edges
-                            //of the Cards.
-                            Box(modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center) {
-                                    Box(modifier = Modifier.fillMaxWidth(0.95f),
-                                        contentAlignment = Alignment.Center)
-                                {
-                                    Text(i.joke,
-                                        textAlign = TextAlign.Center,
-                                        color = Color.Black)
-                                }
+                            Box(
+                                modifier = Modifier.fillMaxWidth(0.95f),
+                                contentAlignment = Alignment.Center
+                            )
+                            {
+                                Text(
+                                    i.joke,
+                                    textAlign = TextAlign.Center,
+                                    color = Color.Black
+                                )
                             }
                         }
+                    }
                 }
             }
         }
@@ -135,13 +140,16 @@ fun FavoriteScreen(user: User, favorites: List<Joke>) {
 @Preview(showBackground = true)
 @Composable
 fun FavoriteScreenPreview() {
-    CST438_P1Theme {
-        val jokes = listOf<Joke>(Joke("uszdNZ8MRCd", "My new thesaurus is terrible. In fact, it's so bad, I'd say it's terrible."))
+    AppTheme {
+        val jokes = listOf<Joke>(
+            Joke(
+                "uszdNZ8MRCd",
+                "My new thesaurus is terrible. In fact, it's so bad, I'd say it's terrible."
+            )
+        )
         FavoriteScreen(
             User(0, "User", "password"),
             jokes
-            )
-    AppTheme {
-        FavoriteScreen("Android")
+        )
     }
 }
