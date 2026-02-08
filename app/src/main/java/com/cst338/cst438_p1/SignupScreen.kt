@@ -44,7 +44,7 @@ fun SignupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Dad Joke") },
+                title = { Text("Otter-ly Hilarious!") },
             )
         }
     ) { innerPadding ->

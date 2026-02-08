@@ -22,6 +22,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +57,13 @@ class FavoritesActivity : ComponentActivity() {
         setContent {
             CST438_P1Theme {
                     FavoriteScreen(user, favorites)
+            AppTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    FavoriteScreen(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
         }
@@ -72,13 +81,6 @@ fun FavoriteScreen(user: User, favorites: List<Joke>) {
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                colors = TopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                    scrolledContainerColor = MaterialTheme.colorScheme.primary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                    actionIconContentColor = MaterialTheme.colorScheme.primary
-                ),
                 title = { Text("Favorites") },
                 navigationIcon = { IconButton(onClick = {
                     val intent = Intent(context, HomeActivity::class.java)
@@ -90,6 +92,13 @@ fun FavoriteScreen(user: User, favorites: List<Joke>) {
                         contentDescription = null
                     )
                 }},
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         }
     ) { innerPadding ->
@@ -132,5 +141,7 @@ fun FavoriteScreenPreview() {
             User(0, "User", "password"),
             jokes
             )
+    AppTheme {
+        FavoriteScreen("Android")
     }
 }
