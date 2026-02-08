@@ -9,6 +9,10 @@ import androidx.room.Delete
 interface UserDao {
     @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
     suspend fun getUser(username: String): User?
+
+    @Query("SELECT * FROM users WHERE uid = :id")
+    suspend fun getUserById(id: Int): User?
+
     @Query("SELECT * FROM USERS")
     fun getAll(): List<User>
 
@@ -28,6 +32,6 @@ interface UserDao {
 //    fun deleteJoke(joke: Joke)
 
     @Insert
-    suspend fun inset(user: User)
+    suspend fun insert(user: User)
 
 }

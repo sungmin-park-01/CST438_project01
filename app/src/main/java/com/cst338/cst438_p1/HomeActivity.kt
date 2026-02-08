@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class HomeActivity : ComponentActivity() {
 
@@ -13,9 +13,20 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        setContent {
-            AppTheme {
-                HomeScreen()
+        val db = AppDatabase.getDatabase(this, lifecycleScope)
+        val userDao = db.userDao()
+
+        val userIdKey = "CST438P1.UserId.Key"
+        val loggedInUserId = intent.getIntExtra(userIdKey, -1)
+
+        var user: User
+        lifecycleScope.launch {
+            user = userDao.getUserById(loggedInUserId)!!
+
+            setContent {
+                AppTheme {
+                    HomeScreen(user)
+                }
             }
         }
     }
