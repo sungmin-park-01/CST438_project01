@@ -11,13 +11,3 @@ data class User(
     @ColumnInfo(name = "password") val password: String
 
 )
-@Entity(tableName = "jokes")
-data class Joke(
-    @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "joke") val joke: String?
-)
-@Entity(tableName = "favorites")
-data class Favorite(
-    @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "joke") val joke: String?
-)

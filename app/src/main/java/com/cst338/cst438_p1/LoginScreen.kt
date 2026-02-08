@@ -1,6 +1,6 @@
 package com.cst338.cst438_p1
 
-
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,23 +30,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-    fun LoginScreen(
-        onLoginSuccess: () -> Unit,
-        onSignupClick: () -> Unit
-    ){
-        var username by remember {
-            mutableStateOf("")
-        }
-        var password by remember {
-            mutableStateOf("")
-        }
-        val context = androidx.compose.ui.platform.LocalContext.current
-        val scope = rememberCoroutineScope()
+fun LoginScreen() {
+    var username by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = rememberCoroutineScope()
 
-        val db = AppDatabase.getDatabase(context)
-        val userDao = db.userDao()
+    val db = AppDatabase.getDatabase(context, scope)
+    val userDao = db.userDao()
+
+    val userIdKey = "CST438P1.UserId.Key"
 
     Scaffold(
         topBar = {
@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
                 title = {
-                    Text("Dad Joke")
+                    Text("Otter-ly Hilarious!")
                 }
             )
         },
@@ -65,8 +65,10 @@ import kotlinx.coroutines.launch
         }
     ) {innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(24.dp).padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .padding(innerPadding),
             verticalArrangement = Arrangement.Top
         ) {
             Text(
@@ -107,8 +109,10 @@ import kotlinx.coroutines.launch
                                 }
                                 user.password != password -> {
                                     Toast.makeText(context,"Incorrect password", Toast.LENGTH_SHORT).show()
-                            } else -> {
-                                onLoginSuccess()
+                                } else -> {
+                                val intent = Intent(context, HomeActivity::class.java)
+                                intent.putExtra(userIdKey, user.uid)
+                                context.startActivity(intent)
                             }
                             }
                         }
@@ -124,12 +128,18 @@ import kotlinx.coroutines.launch
                 text = "Don't have an account?"
             )
             Button(
-                onClick = onSignupClick,
+                onClick = {
+                    val intent = Intent(context, SignupActivity::class.java)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.fillMaxWidth()
             ){
                 Text("Sign up!")
             }
-            Button(onClick = onLoginSuccess) {
+            Button(onClick = {
+                val intent = Intent(context, HomeActivity::class.java)
+                intent.putExtra(userIdKey, 1)
+            }) {
                 Text("Dev: Skip Login")
             }
         }
@@ -140,10 +150,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreenPreview() {
     AppTheme {
-        LoginScreen (
-            onLoginSuccess = {},
-            onSignupClick = {}
-        )
+        LoginScreen ()
     }
 
 }
