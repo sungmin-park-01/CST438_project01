@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(user: User) {
+fun HomeScreen(user: User, favoriteDao: FavoriteDao? = null) {
     val context = LocalContext.current
 
     val userIdKey = "CST438P1.UserId.Key"
@@ -87,7 +87,11 @@ fun HomeScreen(user: User) {
             )
 
             Button(
-                onClick = { print("haha") },
+                onClick = {
+                    val intent = Intent(context, JokeActivity::class.java)
+                    intent.putExtra(userIdKey, user.uid)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text("New Jokes")
