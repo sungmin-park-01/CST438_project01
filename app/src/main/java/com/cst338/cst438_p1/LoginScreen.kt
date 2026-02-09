@@ -139,7 +139,8 @@ fun LoginScreen(
             }
             Button(onClick = {
                 val intent = Intent(context, HomeActivity::class.java)
-                intent.putExtra(userIdKey, 1)
+               intent.putExtra(userIdKey, 1)
+                context.startActivity(intent)
             }) {
                 Text("Dev: Skip Login")
             }

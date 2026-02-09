@@ -16,16 +16,16 @@
       <SelectionState runConfigName="LoginscreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="loginEmpty()">
+      <SelectionState runConfigName="devSkip()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="signupButton()">
+      <SelectionState runConfigName="SignupScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AppDatabaseTest">
+      <SelectionState runConfigName="signupEmpty()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="loginSuccess()">
+      <SelectionState runConfigName="signupUi()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
