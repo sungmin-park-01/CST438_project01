@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +38,20 @@ class ProfileActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(this, lifecycleScope)
         val userDao = db.userDao()
 
-        val userIdKey = "CST438P1.UserId.Key"
-        val loggedInUserId = intent.getIntExtra(userIdKey, -1)
+        val sessionManager = SessionManager(this)
 
         var user: User
         lifecycleScope.launch {
+            val loggedInUserId: Int? = sessionManager.userId.first()
+
+            if (loggedInUserId == null) {
+                val intent = Intent(this@ProfileActivity, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                return@launch
+            }
+
             user = userDao.getUserById(loggedInUserId)!!
 
             setContent {
