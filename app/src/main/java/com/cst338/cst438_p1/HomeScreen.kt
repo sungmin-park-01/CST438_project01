@@ -98,7 +98,7 @@ fun HomeScreen(user: User, favoriteDao: FavoriteDao? = null) {
             Button(
                 onClick = {
                     val intent = Intent(context, JokeActivity::class.java)
-                    intent.putExtra(userIdKey, user.uid)
+//                    intent.putExtra(userIdKey, user.uid)
                     context.startActivity(intent)
                 },
                 modifier = Modifier.padding(top = 16.dp)

@@ -12,7 +12,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            CST438_P1Theme{
+            AppTheme {
                 LoginScreen()
             }
         }
