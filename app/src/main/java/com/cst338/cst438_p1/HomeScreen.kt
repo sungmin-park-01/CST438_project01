@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +23,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(user: User) {
+fun HomeScreen(user: User, favoriteDao: FavoriteDao? = null) {
     val context = LocalContext.current
 
-    val userIdKey = "CST438P1.UserId.Key"
+    val sessionManager = remember { SessionManager(context) }
+    // avoid recomposition
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -56,8 +60,13 @@ fun HomeScreen(user: User) {
                 ) {
                     Button(
                         onClick = {
-                            val intent = Intent(context, LoginActivity::class.java)
-                            context.startActivity(intent)
+                            scope.launch {
+                                // session update
+                                sessionManager.logout()
+
+                                val intent = Intent(context, LoginActivity::class.java)
+                                context.startActivity(intent)
+                            }
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -87,7 +96,11 @@ fun HomeScreen(user: User) {
             )
 
             Button(
-                onClick = { print("haha") },
+                onClick = {
+                    val intent = Intent(context, JokeActivity::class.java)
+//                    intent.putExtra(userIdKey, user.uid)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text("New Jokes")
@@ -96,7 +109,7 @@ fun HomeScreen(user: User) {
             Button(
                 onClick = {
                     val intent = Intent(context, FavoritesActivity::class.java)
-                    intent.putExtra(userIdKey, user.uid)
+                    //intent.putExtra(userIdKey, user.uid)
                     context.startActivity(intent)
                 },
                 modifier = Modifier.padding(top = 2.dp)
@@ -107,7 +120,7 @@ fun HomeScreen(user: User) {
             Button(
                 onClick = {
                     val intent = Intent(context, ProfileActivity::class.java)
-                    intent.putExtra(userIdKey, user.uid)
+                    //intent.putExtra(userIdKey, user.uid)
                     context.startActivity(intent)
                 },
                 modifier = Modifier.padding(top = 2.dp)

@@ -2,6 +2,7 @@ package com.cst338.cst438_p1
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
@@ -15,6 +16,6 @@ interface JokeDao {
             "WHERE uid = :uid")
     suspend fun getJokeByUserId(uid: Int): List<Joke>
 
-    @Insert
-    suspend fun insert(joke: Joke)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(joke: Joke): Long
 }

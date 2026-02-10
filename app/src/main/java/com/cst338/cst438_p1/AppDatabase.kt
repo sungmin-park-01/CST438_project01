@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.Room
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -37,7 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 INSTANCE?.let { database ->
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         val userDao = database.userDao()
                         val jokeDao = database.jokeDao()
                         val favoriteDao = database.favoriteDao()

@@ -70,10 +70,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     kapt("androidx.room:room-compiler:2.8.4")
-
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.0")
-
-
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 
 }

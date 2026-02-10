@@ -21,8 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,8 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.cst338.cst438_p1.ui.theme.CST438_P1Theme
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class FavoritesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,13 +43,27 @@ class FavoritesActivity : ComponentActivity() {
         val userDao = db.userDao()
         val jokeDao = db.jokeDao()
 
-        val userIdKey = "CST438P1.UserId.Key"
-        val loggedInUserId = intent.getIntExtra(userIdKey, -1)
+        // val userIdKey = "CST438P1.UserId.Key"
+        // val loggedInUserId = intent.getIntExtra(userIdKey, -1)
 
         var user: User
         var favorites: List<Joke>
+
+        val sessionManager = SessionManager(this)
+
         lifecycleScope.launch {
-            user = userDao.getUserById(loggedInUserId)!!
+            val loggedInUserId: Int? = sessionManager.userId.first()
+
+            if (loggedInUserId == null) {
+                val intent = Intent(this@FavoritesActivity, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                return@launch
+            }
+
+            //val uid: Int = loggedInUserId
+            user = userDao.getUserById(loggedInUserId)!! // !! ?
             favorites = jokeDao.getJokeByUserId(loggedInUserId)
 
             setContent {

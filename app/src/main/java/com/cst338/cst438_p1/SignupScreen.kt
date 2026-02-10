@@ -114,7 +114,7 @@ fun SignupScreen(
                     }
                 }
             ) {
-                Text("Sign up")
+                Text("Complete Sign Up")
             }
 
         }
