@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,10 +44,14 @@ fun LoginScreen() {
     val context = androidx.compose.ui.platform.LocalContext.current
     val scope = rememberCoroutineScope()
 
+    // for manage session
+    val sessionManager = remember {
+        SessionManager(context)
+    }
+
     val db = AppDatabase.getDatabase(context, scope)
     val userDao = db.userDao()
 
-    val userIdKey = "CST438P1.UserId.Key"
 
     Scaffold(
         topBar = {
@@ -110,9 +115,11 @@ fun LoginScreen() {
                                 user.password != password -> {
                                     Toast.makeText(context,"Incorrect password", Toast.LENGTH_SHORT).show()
                                 } else -> {
-                                val intent = Intent(context, HomeActivity::class.java)
-                                intent.putExtra(userIdKey, user.uid)
-                                context.startActivity(intent)
+                                    // session update
+                                    sessionManager.login(user.uid)
+                                //move to home
+                                    val intent = Intent(context, HomeActivity::class.java)
+                                    context.startActivity(intent)
                             }
                             }
                         }
@@ -135,6 +142,12 @@ fun LoginScreen() {
                 modifier = Modifier.fillMaxWidth()
             ){
                 Text("Sign up!")
+            }
+            Button(onClick = {
+                val intent = Intent(context, HomeActivity::class.java)
+
+            }) {
+                Text("Dev: Skip Login")
             }
         }
     }
