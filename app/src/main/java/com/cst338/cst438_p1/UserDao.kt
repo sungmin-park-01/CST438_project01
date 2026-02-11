@@ -7,7 +7,7 @@ import androidx.room.Delete
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
+    @Query("SELECT * FROM users WHERE username = :username")
     suspend fun getUser(username: String): User?
 
     @Query("SELECT * FROM users WHERE uid = :id")
