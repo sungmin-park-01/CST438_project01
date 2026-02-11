@@ -14,6 +14,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
@@ -25,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +55,7 @@ fun LoginScreen() {
     val db = AppDatabase.getDatabase(context, scope)
     val userDao = db.userDao()
 
-
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,8 +70,11 @@ fun LoginScreen() {
         },
         bottomBar = {
 
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,8 +88,8 @@ fun LoginScreen() {
             )
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it},
-                label = {Text("Username")},
+                onValueChange = { username = it },
+                label = { Text("Username") },
                 modifier = Modifier
                     .height(60.dp)
             )
@@ -91,8 +97,8 @@ fun LoginScreen() {
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it},
-                label = {Text("password")},
+                onValueChange = { password = it },
+                label = { Text("password") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .height(60.dp)
@@ -101,32 +107,43 @@ fun LoginScreen() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
-                onClick={
+                onClick = {
                     if (username.isEmpty() || password.isEmpty()) {
-                        Toast.makeText(context,"Please fill all fields", Toast.LENGTH_SHORT).show()
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Please fill all fields")
+                        }
                     } else {
                         scope.launch {
                             val user = userDao.getUser(username)
 
-                            when{
+                            when {
                                 user == null -> {
-                                    Toast.makeText(context,"User not found", Toast.LENGTH_SHORT).show()
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("User not found")
+                                    }
                                 }
+
                                 user.password != password -> {
-                                    Toast.makeText(context,"Incorrect password", Toast.LENGTH_SHORT).show()
-                                } else -> {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Incorrect password")
+                                    }
+                                }
+
+                                else -> {
                                     // session update
                                     sessionManager.login(user.uid)
-                                //move to home
+                                    //move to home
                                     val intent = Intent(context, HomeActivity::class.java)
                                     context.startActivity(intent)
-                            }
+                                }
                             }
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
-            ){
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("test_login_button")
+            ) {
                 Text("Login")
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,7 +157,7 @@ fun LoginScreen() {
                     context.startActivity(intent)
                 },
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 Text("Sign up!")
             }
             Button(onClick = {
@@ -157,7 +174,7 @@ fun LoginScreen() {
 @Composable
 fun LoginScreenPreview() {
     AppTheme {
-        LoginScreen ()
+        LoginScreen()
     }
 
 }

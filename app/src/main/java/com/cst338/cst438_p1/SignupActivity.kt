@@ -10,7 +10,7 @@ class SignupActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CST438_P1Theme{
+            AppTheme {
                 SignupScreen(
                     onSignupComplete = {
                         finish()

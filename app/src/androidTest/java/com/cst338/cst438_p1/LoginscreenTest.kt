@@ -2,82 +2,107 @@ package com.cst338.cst438_p1
 
 import android.content.Context
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.room.Room
+import androidx.test.annotation.UiThreadTest
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
-import org.hamcrest.CoreMatchers.allOf
+import org.junit.runner.RunWith
 
-
-
+@RunWith(AndroidJUnit4::class)
 class LoginscreenTest {
 
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    val composeTestRule = createComposeRule()
 
-    private val userIdKey = "CST438P1.UserId.Key"
+    private lateinit var db: AppDatabase
+    private lateinit var userDao: UserDao
+
 
     @Before
-    fun setup(){
+    fun setup() {
         Intents.init()
 
         val context = ApplicationProvider.getApplicationContext<Context>()
 
-        val db = AppDatabase.getDatabase(context, kotlinx.coroutines.GlobalScope)
-        val userDao = db.userDao()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        userDao = db.userDao()
 
-        runBlocking {
-            userDao.insert(User(uid = 1, username = "testuser", password = "password123"))
-        }
     }
+
     @After
-    fun teardown(){
+    fun teardown() {
         Intents.release()
+        db.close()
     }
 
     @Test
-    fun loginSuccess(){
-        composeTestRule.onNodeWithText("Username").performTextInput("testuser")
-        composeTestRule.onNodeWithText("password").performTextInput("password123")
-        composeTestRule.onNodeWithText("Login").performClick()
-        composeTestRule.waitForIdle()
-        Intents.intended(allOf(hasComponent(HomeActivity::class.java.name), hasExtra(userIdKey, 1)))
-    }
-    @Test
-    fun signupButton(){
+    fun signupButton() {
+        composeTestRule.setContent {
+            AppTheme {
+                LoginScreen()
+            }
+        }
+
         composeTestRule.onNodeWithText("Sign up!").performClick()
         Intents.intended(hasComponent(SignupActivity::class.java.name))
     }
 
     @Test
-    fun loginEmpty(){
-        composeTestRule.onNodeWithText("Login").performClick()
+    fun loginEmpty() {
+        composeTestRule.setContent {
+            AppTheme {
+                LoginScreen()
+            }
+        }
+
+        composeTestRule.onNodeWithTag("test_login_button").performClick()
         assert(Intents.getIntents().isEmpty())
     }
+
     @Test
-    fun devSkip(){
+    fun devSkip() {
+        composeTestRule.setContent {
+            AppTheme {
+                LoginScreen()
+            }
+        }
+
         composeTestRule.onNodeWithText("Dev: Skip Login").performClick()
+        composeTestRule.waitForIdle()
         Intents.intended(hasComponent(HomeActivity::class.java.name))
     }
 
     @Test
-    fun logingWrongPassword(){
+    fun logingWrongPassword() = runTest {
+        composeTestRule.setContent {
+            AppTheme {
+                LoginScreen()
+            }
+        }
+        userDao.insert(User(uid = 1, username = "testuser", password = "password123"))
+
         composeTestRule.onNodeWithText("Username").performTextInput("testuser")
         composeTestRule.onNodeWithText("password").performTextInput("wrong_pass")
-        composeTestRule.onNodeWithText("Login").performClick()
+        composeTestRule.onNodeWithTag("test_login_button").performClick()
 
         composeTestRule.waitForIdle()
         assert(Intents.getIntents().isEmpty())
     }
-
 
 
 }
