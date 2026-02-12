@@ -2,8 +2,11 @@ package com.cst338.cst438_p1
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,7 +57,17 @@ fun JokeScreen(
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Joke") }) }
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                title = {
+                    Text("Otter-ly Hilarious!")
+                }
+            )
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -100,3 +113,4 @@ fun JokeScreen(
         }
     }
 }
+
